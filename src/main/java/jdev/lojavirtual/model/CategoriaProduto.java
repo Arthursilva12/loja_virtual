@@ -1,4 +1,4 @@
-package jdev.lojavirtual.model;
+ package jdev.lojavirtual.model;
 
 import java.io.Serializable;
 import java.util.Objects;
