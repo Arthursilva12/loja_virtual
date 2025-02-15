@@ -5,6 +5,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,6 +22,7 @@ import jdev.lojavirtual.model.Acesso;
 import jdev.lojavirtual.repository.AcessoRepository;
 import junit.framework.TestCase;
 
+@Profile("test")
 @SpringBootTest(classes = LojaVirtualApplication.class)
 class LojaVirtualApplicationTests extends TestCase{
 
@@ -35,6 +37,7 @@ class LojaVirtualApplicationTests extends TestCase{
 	
 	@Test// Teste do end-point de salvar
 	public void testeRestApiCadastroAcesso() throws JsonProcessingException, Exception {
+		// pega o contexto da aplicação e é usado para fazer os testes
 		DefaultMockMvcBuilder builder = MockMvcBuilders.webAppContextSetup(this.wac);
 		MockMvc mockMvc = builder.build();
 		
