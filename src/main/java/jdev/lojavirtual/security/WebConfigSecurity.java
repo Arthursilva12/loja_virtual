@@ -30,11 +30,11 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	protected void configure(HttpSecurity http) throws Exception {
 		
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-		.disable().authorizeRequests().antMatchers("/").permitAll()
-		.antMatchers("/index").permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-		.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")// redireciona ou da um retorno para index quando desloga 
-		.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))// mapeia o logout do sistema
-		.and().addFilterAfter(new JWTLoginFIlter("/login", authenticationManager()),
+			.disable().authorizeRequests().antMatchers("/").permitAll()
+			.antMatchers("/index").permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+			.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")// redireciona ou da um retorno para index quando desloga 
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))// mapeia o logout do sistema
+			.and().addFilterAfter(new JWTLoginFIlter("/login", authenticationManager()),
 										UsernamePasswordAuthenticationFilter.class)// filtra as requisições para o login de JWT
 		
 		.addFilterBefore(new JwtApiAutenticacaoFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -44,7 +44,7 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
 	}
-	
+	 
 	
 	@Override// Ignora algumas ULR livres de autenticação
 	public void configure(WebSecurity web) throws Exception {
