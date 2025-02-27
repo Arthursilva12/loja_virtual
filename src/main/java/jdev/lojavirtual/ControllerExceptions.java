@@ -18,9 +18,21 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import jdev.lojavirtual.model.dto.ObjetoErroDTO;
 
+// Classe reponsaval por capturar as exceptions no projeto
 @RestControllerAdvice
 @ControllerAdvice
 public class ControllerExceptions extends ResponseEntityExceptionHandler{
+	
+	@ExceptionHandler(ExceptionLojaVirtualJava.class)
+	public ResponseEntity<Object> handleExceptionCuston(ExceptionLojaVirtualJava ex){
+		ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
+		
+		objetoErroDTO.setError(ex.getMessage());
+		objetoErroDTO.setCode(HttpStatus.OK.toString());
+		
+		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
+	}
+	
 
 	// Captura exceptions do projeto 
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
@@ -45,6 +57,8 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler{
 		objetoErroDTO.setError(msg);
 		objetoErroDTO.setCode(status.value() + " ==> " + status.getReasonPhrase());
 		
+		ex.printStackTrace();
+		
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
@@ -67,6 +81,8 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler{
 		
 		objetoErroDTO.setError(msg);
 		objetoErroDTO.setCode(HttpStatus.INTERNAL_SERVER_ERROR.toString());
+		
+		ex.printStackTrace();
 		
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
