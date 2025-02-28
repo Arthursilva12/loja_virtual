@@ -67,7 +67,7 @@ public class AcessoController {
 		Acesso acesso = acessoRepository.findById(id).orElse(null);
 		
 		if(acesso == null) {
-			throw new ExceptionLojaVirtualJava("Não encotrou acesso com código: "+id);
+			throw new ExceptionLojaVirtualJava("Não encotrou acesso com código: " + id);
 		}
 		
 		return new ResponseEntity<Acesso>(acesso,HttpStatus.OK);

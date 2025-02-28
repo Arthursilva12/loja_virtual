@@ -23,7 +23,8 @@ import jdev.lojavirtual.model.dto.ObjetoErroDTO;
 @ControllerAdvice
 public class ControllerExceptions extends ResponseEntityExceptionHandler{
 	
-	@ExceptionHandler(ExceptionLojaVirtualJava.class)
+	// responsavel por interceptar as exceções personalizada
+	@ExceptionHandler(ExceptionLojaVirtualJava.class)// mapeia a exceção customizada
 	public ResponseEntity<Object> handleExceptionCuston(ExceptionLojaVirtualJava ex){
 		ObjetoErroDTO objetoErroDTO = new ObjetoErroDTO();
 		
@@ -32,7 +33,6 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler{
 		
 		return new ResponseEntity<Object>(objetoErroDTO, HttpStatus.OK);
 	}
-	
 
 	// Captura exceptions do projeto 
 	@ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
@@ -69,9 +69,9 @@ public class ControllerExceptions extends ResponseEntityExceptionHandler{
 		
 		String msg = "";
 		
-		if(ex instanceof SQLException) {
+		if(ex instanceof DataIntegrityViolationException) {
 			msg = "Erro de integridade no banco: " + ((DataIntegrityViolationException) ex).getCause().getMessage();
-		}else if(ex instanceof SQLException) {
+		}else if(ex instanceof ConstraintViolationException) {
 			msg = "Erro de chave estrangeira" + ((ConstraintViolationException) ex).getCause().getMessage();
 		}else if(ex instanceof SQLException) {
 			msg = "Erro de SQL do Banco" + ((SQLException) ex).getCause().getMessage();
