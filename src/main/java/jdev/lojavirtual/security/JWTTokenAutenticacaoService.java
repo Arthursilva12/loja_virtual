@@ -72,6 +72,7 @@ public class JWTTokenAutenticacaoService {
 					}
 				}
 			}
+			
 		}catch (io.jsonwebtoken.SignatureException e) {
 			response.getWriter().write("token está inválido");
 		}catch (ExpiredJwtException e) {
