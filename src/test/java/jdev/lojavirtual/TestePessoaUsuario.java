@@ -1,9 +1,6 @@
 package jdev.lojavirtual;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import javax.xml.crypto.Data;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
 import jdev.lojavirtual.controller.PessoaController;
-import jdev.lojavirtual.model.PessoaFisica;
+import jdev.lojavirtual.enums.TipoEndereco;
+import jdev.lojavirtual.model.Endereco;
 import jdev.lojavirtual.model.PessoaJuridica;
 import junit.framework.TestCase;
 
@@ -28,7 +26,7 @@ public class TestePessoaUsuario extends TestCase{
 		
 		PessoaJuridica pessoaJuridica = new PessoaJuridica();
 		pessoaJuridica.setNome("Arthursilvateste");
-		pessoaJuridica.setEmail("Arthurteste@gmail.com");
+		pessoaJuridica.setEmail("Arthurteste2@gmail.com");
 		pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
 		pessoaJuridica.setTelefone("619830573");
 		pessoaJuridica.setInscEstadual("3453453453453");
@@ -36,8 +34,44 @@ public class TestePessoaUsuario extends TestCase{
 		pessoaJuridica.setNomeFantasia("fdgdfsgfgd");
 		pessoaJuridica.setRazaoSocial("fdghsrfghjdfgh");
 		
-		pessoaController.salvarPj(pessoaJuridica);
+		Endereco endereco1 = new Endereco();
+		endereco1.setBairro("Dalva 7 ghsdfsdg");
+		endereco1.setCep("7325667567346");
+		endereco1.setCidade("luziânia");
+		endereco1.setComplemento("Arvore grande");
+		endereco1.setEmpresa(pessoaJuridica);
+		endereco1.setLogradouro("redfhd");
+		endereco1.setNumero("15");
+		endereco1.setPessoa(pessoaJuridica);
+		endereco1.setRua("rua 17");
+		endereco1.setTipoEndereco(TipoEndereco.COBRANCA);
+		endereco1.setUf("GO");
 		
+		Endereco endereco2 = new Endereco();
+		endereco2.setBairro("Dalva 8 fgfsdfsdf");
+		endereco2.setCep("546565675645");
+		endereco2.setCidade("luziânia");
+		endereco2.setComplemento("casa verde");
+		endereco2.setEmpresa(pessoaJuridica);
+		endereco2.setLogradouro("dfsdfs");
+		endereco2.setNumero("23");
+		endereco2.setPessoa(pessoaJuridica);
+		endereco2.setRua("rua 63");
+		endereco2.setTipoEndereco(TipoEndereco.ENTREGA);
+		endereco2.setUf("GO");
+		
+		pessoaJuridica.getEnderecos().add(endereco1);
+		pessoaJuridica.getEnderecos().add(endereco2);
+		
+		pessoaJuridica = pessoaController.salvarPj(pessoaJuridica).getBody();
+		
+		assertEquals(true, pessoaJuridica.getId() > 0);
+		
+		for (Endereco endereco : pessoaJuridica.getEnderecos()) {
+			assertEquals(true, endereco.getId() > 0);// valida se foi gerado a PK
+		}
+		// test se veio os 2 endereços
+		assertEquals(2, pessoaJuridica.getEnderecos().size());
 	}
 	
 }
