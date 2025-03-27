@@ -35,6 +35,10 @@ public class PessoaController {
 			throw new ExceptionLojaVirtualJava("Já existe CNPJ com o número: " + pessoaJuridica.getCnpj());
 		}
 		
+		if(pessoaJuridica.getId() == null && pessoaRepository.existeInscEstadualCadastrado(pessoaJuridica.getInscEstadual()) != null) {
+			throw new ExceptionLojaVirtualJava("Já existe Inscrição estadual cadastrado com o número: " + pessoaJuridica.getInscEstadual());
+		}
+		
 		pessoaJuridica = pessoaUserService.salvarPessoaJuridica(pessoaJuridica);
 		
 		return new ResponseEntity<PessoaJuridica>(pessoaJuridica, HttpStatus.OK);

@@ -41,7 +41,7 @@ public class PessoaUserService {
 			String constraint = usuarioRepository.consultaConstraintAcesso();
 			
 			if(constraint != null) {// remove a restrição caso tenha
-				jdbcTemplate.execute("begin; alter table usuarios_acesso drop constraint "+ constraint +"; commit;");
+				jdbcTemplate.execute("begin; alter table usuario_acesso drop constraint "+ constraint +"; commit;");
 			}
 			
 			usuarioPj = new Usuario();
@@ -57,12 +57,13 @@ public class PessoaUserService {
  			usuarioPj = usuarioRepository.save(usuarioPj);
 
 			usuarioRepository.insereAcessoUserPj(usuarioPj.getId());
+			usuarioRepository.insereAcessoUserPj(usuarioPj.getId(), "ROLE_ADMIN");
 			
 			StringBuilder mensagemHtml = new StringBuilder();
 			
-			mensagemHtml.append("<b>Segue abaixo sues dados de acesso para a loja virtual<b>");
-			mensagemHtml.append("<b>Login: </b>"+juridica.getEmail()+"</b><b/>");
-			mensagemHtml.append("<b>Senha: </b>").append(senha).append("</b><b/>");
+			mensagemHtml.append("<b>Segue abaixo seus dados de acesso para a loja virtual</b><br/>");
+			mensagemHtml.append("<b>Login: </b>"+juridica.getEmail()+"<br/>");
+			mensagemHtml.append("<b>Senha: </b>").append(senha).append("<br/><br/>");
 			mensagemHtml.append("Obrigado!");
 			
 			try {

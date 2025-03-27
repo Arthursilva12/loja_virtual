@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class ServiceSendEmail {
 
 	private String userName = "silvaarthur.pereira123@gmail.com";
-	private String senha = "@Silva12340*";
+	private String senha = "ocvl kxvv pdif iqvh";
 	
 	@Async
 	public void enviarEmailHtml(String assunto, String mensagem, String emailDestino) throws UnsupportedEncodingException, MessagingException {
@@ -50,7 +50,7 @@ public class ServiceSendEmail {
 		msg.setFrom(new InternetAddress(userName, "Arthur - do java", "UTF-8"));
 		msg.setRecipients(Message.RecipientType.TO, toUser);// email recebedor
 		msg.setSubject(assunto);
-		msg.setText(mensagem);
+		msg.setContent(mensagem, "text/html; charset=utf-8");
 		
 		Transport.send(msg);
 	}
