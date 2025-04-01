@@ -1,5 +1,7 @@
 package jdev.lojavirtual.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,11 @@ public class PessoaController {
 	// end-point, microservice e uma API se for liberar
 	@ResponseBody
 	@PostMapping(value = "/salvarPj")
-	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody PessoaJuridica pessoaJuridica) throws ExceptionLojaVirtualJava{
+	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionLojaVirtualJava{
+		
+//		if(pessoaJuridica.getNome() == null || pessoaJuridica.getNome().trim().isEmpty()) {
+//			throw new ExceptionLojaVirtualJava("Informe o campo de nome");
+//		}
 		
 		if(pessoaJuridica == null) {
 			throw new ExceptionLojaVirtualJava("Pessoa juridica não pode ser null");

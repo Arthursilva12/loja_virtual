@@ -31,12 +31,13 @@ public class TestePessoaUsuario extends TestCase{
 	public void testCadPessoaJuridica() throws ExceptionLojaVirtualJava {
 		
 		PessoaJuridica pessoaJuridica = new PessoaJuridica();
-		pessoaJuridica.setNome("Arthursilvateste");
-		pessoaJuridica.setEmail("silvaarthurteste@gmail.com");
-		pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
+		pessoaJuridica.setNome("Arthursilvatesteeee");
+		pessoaJuridica.setEmail("silvaarthurtesteee@gmail.com");
+//		pessoaJuridica.setCnpj("" + Calendar.getInstance().getTimeInMillis());
+		pessoaJuridica.setCnpj("92.542.979/0001-48");
 		pessoaJuridica.setTelefone("619830573");
-		pessoaJuridica.setInscEstadual("3453453453453");
-		pessoaJuridica.setInscMunicipal("435345345345");
+		pessoaJuridica.setInscEstadual("906789678");
+		pessoaJuridica.setInscMunicipal("435347890558955345345");
 		pessoaJuridica.setNomeFantasia("fdgdfsgfgd");
 		pessoaJuridica.setRazaoSocial("fdghsrfghjdfgh");
 		

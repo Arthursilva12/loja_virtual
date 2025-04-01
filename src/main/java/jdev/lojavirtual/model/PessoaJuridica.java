@@ -4,12 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.br.CNPJ;
+
 @Entity
 @Table(name = "pessoa_juridica")
 //@PrimaryKeyJoinColumn(name = "id_pessoa")
 public class PessoaJuridica extends Pessoa {
 	private static final long serialVersionUID = 1L;
 
+	@CNPJ(message = "CNPJ está inválido")
 	@Column(nullable = false)
 	private String cnpj;
 	
