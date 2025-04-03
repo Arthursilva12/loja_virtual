@@ -5,10 +5,12 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import jdev.lojavirtual.model.PessoaFisica;
 import jdev.lojavirtual.model.PessoaJuridica;
 import jdev.lojavirtual.model.Usuario;
+import jdev.lojavirtual.model.dto.CepDTO;
 import jdev.lojavirtual.repository.PessoaFisicaRepository;
 import jdev.lojavirtual.repository.PessoaRepository;
 import jdev.lojavirtual.repository.UsuarioRepository;
@@ -131,4 +133,9 @@ public class PessoaUserService {
 		
 		return pessoaFisica;
 	}
+	
+	public CepDTO consultaCep(String cep) {
+		return new RestTemplate().getForEntity("https://viacep.com.br/ws/"+cep+"/json/", CepDTO.class).getBody();
+	}
+	
 }
