@@ -1,7 +1,5 @@
 package jdev.lojavirtual;
 
-import java.util.Calendar;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,7 +8,6 @@ import org.springframework.context.annotation.Profile;
 import jdev.lojavirtual.controller.PessoaController;
 import jdev.lojavirtual.enums.TipoEndereco;
 import jdev.lojavirtual.model.Endereco;
-import jdev.lojavirtual.model.Pessoa;
 import jdev.lojavirtual.model.PessoaFisica;
 import jdev.lojavirtual.model.PessoaJuridica;
 import jdev.lojavirtual.repository.PessoaRepository;
