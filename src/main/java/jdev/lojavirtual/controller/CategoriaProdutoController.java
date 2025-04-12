@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jdev.lojavirtual.ExceptionLojaVirtualJava;
-import jdev.lojavirtual.model.Acesso;
 import jdev.lojavirtual.model.CategoriaProduto;
 import jdev.lojavirtual.model.dto.CategoriaProdutoDTO;
 import jdev.lojavirtual.repository.CategoriaProdutoRepository;
