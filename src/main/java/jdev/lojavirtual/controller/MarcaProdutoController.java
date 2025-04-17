@@ -27,12 +27,10 @@ public class MarcaProdutoController {
 
 	@ResponseBody
 	@PostMapping(value = "/salvarMarcaProduto")
-	public ResponseEntity<MarcaProduto> salvarMarcaProduto(@RequestBody @Valid MarcaProduto marcaProduto)
-			throws ExceptionLojaVirtualJava {
+	public ResponseEntity<MarcaProduto> salvarMarcaProduto(@RequestBody @Valid MarcaProduto marcaProduto) throws ExceptionLojaVirtualJava {
 
 		if (marcaProduto.getId() == null) {
-			List<MarcaProduto> marcaProdutos = marcaRepository
-					.buscarMarcaDesc(marcaProduto.getNomeDesc().toUpperCase());
+			List<MarcaProduto> marcaProdutos = marcaRepository.buscarMarcaDesc(marcaProduto.getNomeDesc().toUpperCase());
 
 			if (!marcaProdutos.isEmpty()) {
 				throw new ExceptionLojaVirtualJava("Já existe marca com a descrição: " + marcaProduto.getNomeDesc());
