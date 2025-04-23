@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "imagem_produto")
 @SequenceGenerator(name = "seq_imagem_produto", sequenceName="seq_imagem_produto", allocationSize= 1, initialValue= 1)
@@ -26,25 +28,27 @@ public class ImagemProduto implements Serializable {
 	private Long id;
 	
 	@Column(columnDefinition = "text", nullable = false) 
-	private Integer imagem_original;
+	private String imagem_original;
 	
 	@Column(columnDefinition = "text", nullable = false)
-	private Integer imagem_miniatura;
+	private String imagem_miniatura;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
-	private Pessoa empresa;
+	private PessoaJuridica empresa;
 	
-	public Pessoa getEmpresa() {
+	public PessoaJuridica getEmpresa() {
 		return empresa;
 	}
 
-	public void setEmpresa(Pessoa empresa) {
+	public void setEmpresa(PessoaJuridica empresa) {
 		this.empresa = empresa;
 	}
 
@@ -56,19 +60,19 @@ public class ImagemProduto implements Serializable {
 		this.id = id;
 	}
 
-	public Integer getImagem_original() {
+	public String getImagem_original() {
 		return imagem_original;
 	}
 
-	public void setImagem_original(Integer imagem_original) {
+	public void setImagem_original(String imagem_original) {
 		this.imagem_original = imagem_original;
 	}
 
-	public Integer getImagem_miniatura() {
+	public String getImagem_miniatura() {
 		return imagem_miniatura;
 	}
 
-	public void setImagem_miniatura(Integer imagem_miniatura) {
+	public void setImagem_miniatura(String imagem_miniatura) {
 		this.imagem_miniatura = imagem_miniatura;
 	}
 
