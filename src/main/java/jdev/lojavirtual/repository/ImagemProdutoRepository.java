@@ -14,13 +14,8 @@ import jdev.lojavirtual.model.ImagemProduto;
 @Transactional
 public interface ImagemProdutoRepository extends JpaRepository<ImagemProduto, Long> {
 
-	
-//	@Query("select a from ImagemProduto a where a.produto.id = ?1")
-//	List<ImagemProduto> buscaImagensProduto(Long idProduto);
-
 	@Query("select a from ImagemProduto a where a.produto.id = ?1")
 	List<ImagemProduto> buscaImagemProduto(Long idProduto);
-
 	
 	@Transactional
 	@Modifying(flushAutomatically = true)
