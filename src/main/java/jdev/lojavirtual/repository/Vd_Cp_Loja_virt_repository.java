@@ -11,4 +11,6 @@ import jdev.lojavirtual.model.VendaCompraLojaVirtual;
 @Transactional
 public interface Vd_Cp_Loja_virt_repository extends JpaRepository<VendaCompraLojaVirtual, Long> {
 
+	
+	
 }

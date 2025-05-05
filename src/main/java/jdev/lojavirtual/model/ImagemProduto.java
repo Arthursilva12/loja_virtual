@@ -34,13 +34,11 @@ public class ImagemProduto implements Serializable {
 	@Column(columnDefinition = "text", nullable = false)
 	private String imagem_miniatura;
 	
-//	@JsonIgnore
-	@JsonIgnoreProperties(allowGetters = true)
+	@JsonIgnore// Usado para retira recursividade, retire caso de problemas depois
 	@ManyToOne
 	@JoinColumn(name = "produto_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "produto_fk"))
 	private Produto produto;
 
-//	@JsonIgnore
 	@JsonIgnoreProperties(allowGetters = true)
 	@ManyToOne(targetEntity = PessoaJuridica.class)
 	@JoinColumn(name = "empresa_id", nullable = false,
