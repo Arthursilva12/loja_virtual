@@ -1,9 +1,6 @@
 package jdev.lojavirtual.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +10,17 @@ public class VendaService {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	public void ativaRegistroVendaBanco(Long idVenda) {
+		String sql = "begin; update vd_cp_loja_virt set excluido = false where id = " + idVenda + "; commit;";
+		jdbcTemplate.execute(sql);
+	}
+	
+	
+	public void exclusaoTotalVendaBanco2(Long idVenda) {
+		String sql = "begin; update vd_cp_loja_virt set excluido = true where id = " + idVenda + "; commit;";
+		jdbcTemplate.execute(sql);
+	}
+	
 	public void exclusaoTotalVendaBanco(Long idVenda) {
 		
 		String value = 
