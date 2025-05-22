@@ -1,14 +1,31 @@
 package jdev.lojavirtual.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import jdev.lojavirtual.model.VendaCompraLojaVirtual;
+import jdev.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
 
 @Service
 public class VendaService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private EntityManager entityManager;
+	
+	@Autowired
+	private Vd_Cp_Loja_virt_repository vd_Cp_Loja_virt_repository;
+	
 
 	public void ativaRegistroVendaBanco(Long idVenda) {
 		String sql = "begin; update vd_cp_loja_virt set excluido = false where id = " + idVenda + "; commit;";
@@ -33,6 +50,17 @@ public class VendaService {
 			+ "commit;";
 		
 		jdbcTemplate.execute(value);
+	}
+	
+	
+	public List<VendaCompraLojaVirtual> consultaVendaFaixaData(String data1, String data2) throws ParseException {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+		Date d1 = dateFormat.parse(data1);
+		Date d2 = dateFormat.parse(data2);
+
+		return vd_Cp_Loja_virt_repository.consultaVendaFaixaData(d1, d2);
 	}
 	
 }

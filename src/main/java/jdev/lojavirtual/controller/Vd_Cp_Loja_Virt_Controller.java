@@ -1,14 +1,11 @@
 package jdev.lojavirtual.controller;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -186,13 +183,7 @@ public class Vd_Cp_Loja_Virt_Controller {
 		
 		List<VendaCompraLojaVirtual> compraLojaVirtual = null;
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-		
-		Date d1 = dateFormat.parse(data1);
-		Date d2 = dateFormat.parse(data2);
-		
-		
-		compraLojaVirtual = vd_Cp_Loja_virt_repository.consultaVendaFaixaData(d1, d2);
+		compraLojaVirtual = vendaService.consultaVendaFaixaData(data1, data2);
 		
 		if(compraLojaVirtual == null) {
 			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
@@ -246,8 +237,10 @@ public class Vd_Cp_Loja_Virt_Controller {
 			compraLojaVirtual = vd_Cp_Loja_virt_repository.vendaPorEnderecoCobranca(valor.toUpperCase().trim());
 		}else if (tipoconsulta.equalsIgnoreCase("POR_ENDERECO_ENTREGA")) {
 			compraLojaVirtual = vd_Cp_Loja_virt_repository.vendaPorEnderecoEntrega(valor.toUpperCase().trim());
+		}else if (tipoconsulta.equalsIgnoreCase("POR_CPF")) {
+			compraLojaVirtual = vd_Cp_Loja_virt_repository.vendaPorCpfCliente(valor.toUpperCase().trim());
 		}
-		
+			
 		if(compraLojaVirtual == null) {
 			compraLojaVirtual = new ArrayList<VendaCompraLojaVirtual>();
 		}
