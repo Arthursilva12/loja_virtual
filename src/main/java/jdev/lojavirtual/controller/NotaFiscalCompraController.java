@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jdev.lojavirtual.ExceptionLojaVirtualJava;
 import jdev.lojavirtual.model.NotaFiscalCompra;
+import jdev.lojavirtual.model.NotaFiscalVenda;
 import jdev.lojavirtual.repository.NotaFiscalCompraRepository;
+import jdev.lojavirtual.repository.NotaFiscalVendaRepository;
 
 @RestController
 public class NotaFiscalCompraController {
@@ -25,6 +27,8 @@ public class NotaFiscalCompraController {
 	@Autowired
 	private NotaFiscalCompraRepository notaFiscalCompraRepository;
 	
+	@Autowired
+	private NotaFiscalVendaRepository notaFiscalVendaRepository;
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarNotaFiscalCompra")
@@ -80,6 +84,32 @@ public class NotaFiscalCompraController {
 		}
 
 		return new ResponseEntity<NotaFiscalCompra>(notaFiscalCompra, HttpStatus.OK);
+	}
+	
+	
+	@ResponseBody// retorna uma lista
+	@GetMapping(value = "/obterNotaFiscalCompraDaVenda/{idVenda}")
+	public ResponseEntity<List<NotaFiscalVenda>> obterNotaFiscalCompraDaVenda(@PathVariable("idVenda") Long idVenda) throws ExceptionLojaVirtualJava {
+		List<NotaFiscalVenda> notaFiscalCompra = notaFiscalVendaRepository.buscaNotaPorVenda(idVenda);
+
+		if (notaFiscalCompra == null) {
+			throw new ExceptionLojaVirtualJava("Não encotrou nota fiscal de venda com código da venda: " + idVenda);
+		}
+
+		return new ResponseEntity<List<NotaFiscalVenda>>(notaFiscalCompra, HttpStatus.OK);
+	}
+	
+	
+	@ResponseBody// retorna um objeto
+	@GetMapping(value = "/obterNotaFiscalCompraDaVendaUnico/{idVenda}")
+	public ResponseEntity<NotaFiscalVenda> obterNotaFiscalCompraDaVendaUnico(@PathVariable("idVenda") Long idVenda) throws ExceptionLojaVirtualJava {
+		NotaFiscalVenda notaFiscalCompra = notaFiscalVendaRepository.buscaNotaPorVendaUnica(idVenda);
+
+		if (notaFiscalCompra == null) {
+			throw new ExceptionLojaVirtualJava("Não encotrou nota fiscal de venda com código da venda: " + idVenda);
+		}
+
+		return new ResponseEntity<NotaFiscalVenda>(notaFiscalCompra, HttpStatus.OK);
 	}
 	
 	

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 
+import jdev.lojavirtual.controller.FormaPagamentoController;
 import jdev.lojavirtual.controller.PessoaController;
 import jdev.lojavirtual.enums.TipoEndereco;
 import jdev.lojavirtual.model.Endereco;
@@ -19,10 +20,19 @@ public class TestePessoaUsuario extends TestCase{
 
 
 	@Autowired
+	private FormaPagamentoController formaPagamentoController;
+	
+	@Autowired
 	private PessoaController pessoaController;
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Test
+	public void TesteFormaPagamento() {
+		formaPagamentoController.listaFormaPagamento();
+		formaPagamentoController.listaFormaPagamento(10L);
+	}
 	
 	@Test
 	public void testCadPessoaJuridica() throws ExceptionLojaVirtualJava {
