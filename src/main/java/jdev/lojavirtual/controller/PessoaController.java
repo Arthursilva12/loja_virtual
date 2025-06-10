@@ -93,10 +93,6 @@ public class PessoaController {
 	@PostMapping(value = "/salvarPj")
 	public ResponseEntity<PessoaJuridica> salvarPj(@RequestBody @Valid PessoaJuridica pessoaJuridica) throws ExceptionLojaVirtualJava{
 		
-//		if(pessoaJuridica.getNome() == null || pessoaJuridica.getNome().trim().isEmpty()) {
-//			throw new ExceptionLojaVirtualJava("Informe o campo de nome");
-//		}
-		
 		if(pessoaJuridica == null) {
 			throw new ExceptionLojaVirtualJava("Pessoa juridica não pode ser null");
 		}

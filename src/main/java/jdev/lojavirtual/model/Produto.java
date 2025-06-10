@@ -49,8 +49,6 @@ public class Produto implements Serializable {
 	@Column(columnDefinition = "text" , length = 2000, nullable = false)
 	private String descricao;
 	
-	// Nota item produto - ASSOCIAR!
-	
 	@NotNull(message = "O peso deve ser informado")
 	@Column(nullable = false)
 	private Double peso;
@@ -84,6 +82,7 @@ public class Produto implements Serializable {
 	
 	private Integer qtdeClick = 0;
 	
+	// Quem cadastrou
 	@NotNull(message = "A empresa deve ser informado")
 	@ManyToOne(targetEntity = Pessoa.class)
 	@JoinColumn(name = "empresa_id", nullable = false,

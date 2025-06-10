@@ -1,9 +1,12 @@
 package jdev.lojavirtual.controller;
 
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import jdev.lojavirtual.ExceptionLojaVirtualJava;
+import jdev.lojavirtual.enums.StatusContaReceber;
+import jdev.lojavirtual.model.ContaReceber;
 import jdev.lojavirtual.model.Endereco;
 import jdev.lojavirtual.model.ItemVendaLoja;
 import jdev.lojavirtual.model.PessoaFisica;
@@ -26,10 +31,12 @@ import jdev.lojavirtual.model.StatusRastreio;
 import jdev.lojavirtual.model.VendaCompraLojaVirtual;
 import jdev.lojavirtual.model.dto.ItemVendaDTO;
 import jdev.lojavirtual.model.dto.VendaCompraLojaVirtualDTO;
+import jdev.lojavirtual.repository.ContaReceberRepository;
 import jdev.lojavirtual.repository.EnderecoRepository;
 import jdev.lojavirtual.repository.NotaFiscalVendaRepository;
 import jdev.lojavirtual.repository.StatusRastreioRepository;
 import jdev.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
+import jdev.lojavirtual.service.ServiceSendEmail;
 import jdev.lojavirtual.service.VendaService;
 
 @RestController
@@ -53,9 +60,15 @@ public class Vd_Cp_Loja_Virt_Controller {
 	@Autowired
 	private VendaService vendaService;
 	
+	@Autowired
+	private ContaReceberRepository contaReceberRepository;
+	
+	@Autowired
+	private ServiceSendEmail serviceSendEmail;
+	
 	@ResponseBody
 	@PostMapping(value = "/salvarVendaLoja")
-	public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionLojaVirtualJava {
+	public ResponseEntity<VendaCompraLojaVirtualDTO> salvarVendaLoja(@RequestBody @Valid VendaCompraLojaVirtual vendaCompraLojaVirtual) throws ExceptionLojaVirtualJava, UnsupportedEncodingException, MessagingException {
 		
 		
 		vendaCompraLojaVirtual.getPessoa().setEmpresa(vendaCompraLojaVirtual.getEmpresa());
@@ -116,6 +129,29 @@ public class Vd_Cp_Loja_Virt_Controller {
 			itemVendaDTO.setQuantidade(item.getQuantidade());
 			compraLojaVirtualDTO.getItemVendaLoja().add(itemVendaDTO);
 		}
+		
+		ContaReceber contaReceber = new ContaReceber();
+		contaReceber.setDescricao("venda da loja virtual n: " + vendaCompraLojaVirtual.getId());
+		contaReceber.setDtPagamento(Calendar.getInstance().getTime());
+		contaReceber.setDtVencimento(Calendar.getInstance().getTime());
+		contaReceber.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
+		contaReceber.setPessoa(vendaCompraLojaVirtual.getPessoa());
+		contaReceber.setStatusContaReceber(StatusContaReceber.QUITADA);
+		contaReceber.setValorDesconto(vendaCompraLojaVirtual.getValorDesconto());
+		contaReceber.setValorTotal(vendaCompraLojaVirtual.getValorTotal());
+		
+		contaReceberRepository.saveAndFlush(contaReceber);
+		// Email para o comprador
+		StringBuilder msgEmail = new StringBuilder();
+		msgEmail.append("Olá,").append(pessoaFisica.getNome()).append("</br>");
+		msgEmail.append("Você realizou a compra n: ").append(vendaCompraLojaVirtual.getId()).append("</br>");
+		msgEmail.append("Na loja ").append(vendaCompraLojaVirtual.getEmpresa().getNomeFantasia());
+		//Assunto, msg, destino
+		serviceSendEmail.enviarEmailHtml("Compra Realizada!", msgEmail.toString(), pessoaFisica.getEmail());
+		// Email para o vendedor
+		msgEmail = new StringBuilder();
+		msgEmail.append("Você realizou uma venda, n: ").append(vendaCompraLojaVirtual.getId());
+		serviceSendEmail.enviarEmailHtml("Venda Realizada!", msgEmail.toString(), vendaCompraLojaVirtual.getEmpresa().getEmail());
 		
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO,HttpStatus.OK);
 	}
