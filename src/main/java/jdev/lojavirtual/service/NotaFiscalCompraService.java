@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import jdev.lojavirtual.model.dto.ObjetoRelatorioStatusCompraDTO;
 import jdev.lojavirtual.model.dto.ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO;
 import jdev.lojavirtual.model.dto.ObjetoRequisicaoRelatorioProdutoNotaFiscalDTO;
 
@@ -16,7 +17,6 @@ public class NotaFiscalCompraService {
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
-	
 	
 	/**
 	 *  Este relatorio permite saber os produtos comprados para serem vendidos pela loja virtual,
@@ -59,10 +59,8 @@ public class NotaFiscalCompraService {
 		
 		retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(ObjetoRequisicaoRelatorioProdutoNotaFiscalDTO.class));
 		
-		
 		return retorno;
 	}
-	
 	
 	/**
 	 * Este relatório retorna os produtos que estão em estoque menor ou igual a 
@@ -72,7 +70,7 @@ public class NotaFiscalCompraService {
 	 * @return List<ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO>
 	 */
 	public List<ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO> gerarRelatorioAlertEstoque(
-							ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO alertaEstoque) {
+								ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO alertaEstoque) {
 		
 		List<ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO> retorno = 
 				new ArrayList<ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO>();
@@ -109,6 +107,49 @@ public class NotaFiscalCompraService {
 		
 		retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(ObjetoRequisicaoRelatorioProdutoAlertaEstoqueBaixoDTO.class));
 		
+		
+		return retorno;
+	}
+	
+	/**
+	 * Este relatorio retorna os produtos que tiveram compra cancelada ou abandonou o carrinho 
+	 * 
+	 * @param objetoRequisicaoRelatorioCompraCanceladaDTO
+	 * @return List<ObjetoRequisicaoRelatorioCompraCanceladaDTO>
+	 */
+	public List<ObjetoRelatorioStatusCompraDTO> gerarRelatorioStatusVendaLojaVirtual(
+									ObjetoRelatorioStatusCompraDTO objetoRequisicaoRelatorioCompraCanceladaDTO) {
+		
+		List<ObjetoRelatorioStatusCompraDTO> retorno = 
+				new ArrayList<ObjetoRelatorioStatusCompraDTO>();
+		
+		String sql = " select p.id as codigoProduto, p.nome as nomeProduto, "
+				+ " pf.email as emailCliente, pf.telefone as foneCliente,"
+				+ " p.valor_venda as valorVendaProduto, pf.id as codigoCliente, "
+				+ " pf.nome as nomeCliente, p.qtd_estoque as qtdEstoque,"
+				+ " cfc.id as codigoVenda, cfc.status_venda_loja_virtual as statusVenda "
+				+ " from vd_cp_loja_virt as cfc"
+				+ " inner join item_venda_loja as ntp on ntp.venda_compra_loja_virtual_id = cfc.id "
+				+ " inner join produto as p on p.id = ntp.produto_id "
+				+ " inner join pessoa_fisica as pf on pf.id = cfc.pessoa_id";
+		
+		// faixa de data é obrigatoria
+		sql += " where cfc.data_venda >= '"+objetoRequisicaoRelatorioCompraCanceladaDTO.getDataInicial()+"' and cfc.data_venda <= '"+objetoRequisicaoRelatorioCompraCanceladaDTO.getDataFinal()+"' ";
+		
+		if(!objetoRequisicaoRelatorioCompraCanceladaDTO.getNomeCliente().isEmpty()) {
+			sql += "and upper(pf.nome) like upper('"+objetoRequisicaoRelatorioCompraCanceladaDTO.getNomeCliente()+"') ";
+		}
+		
+		if(!objetoRequisicaoRelatorioCompraCanceladaDTO.getNomeProduto().isEmpty()) {
+			sql += " and upper(p.nome) like upper('%"+objetoRequisicaoRelatorioCompraCanceladaDTO.getNomeProduto()+"%') ";
+		}
+		
+		if(!objetoRequisicaoRelatorioCompraCanceladaDTO.getStatusVenda().isEmpty()) {
+			sql += " and cfc.status_venda_loja_virtual in ('"+objetoRequisicaoRelatorioCompraCanceladaDTO.getStatusVenda()+"') ";
+		}
+	
+		
+		retorno = jdbcTemplate.query(sql, new BeanPropertyRowMapper(ObjetoRelatorioStatusCompraDTO.class));
 		
 		return retorno;
 	}
