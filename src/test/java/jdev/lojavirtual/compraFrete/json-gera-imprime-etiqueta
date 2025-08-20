@@ -1,0 +1,22 @@
+
+/*GERA A ETIQUETA*/
+{
+	"orders":[
+		"9fae8b0d-902f-4276-8e74-9a5355d6c388"
+	]
+}
+
+/*RETORNO DA GERAÇÃO DA ETIQUETA*/
+{"generate_key":"9fae94ad-229b-426e-ac0f-5d079ba43ab3","9fae8b0d-902f-4276-8e74-9a5355d6c388":{"message":"Envio encaminhado para gera\u00e7\u00e3o","status":true}}
+
+
+/*IMPRESSÃO DAS ETIQUETAS*/
+{
+	"mode": "private",
+	"orders":[
+		"9fae8b0d-902f-4276-8e74-9a5355d6c388"
+	]
+}
+
+/*RESULTADO DA IMPRESSÃO DA ETIQUETA*/
+{"url":"https:\/\/sandbox.melhorenvio.com.br\/imprimir\/FFRblH11MyFD"}

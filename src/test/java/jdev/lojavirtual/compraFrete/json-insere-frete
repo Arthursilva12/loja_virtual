@@ -1,0 +1,126 @@
+
+/*JSON QUE ENVIA OS DADOS PARA INSERIR FRETE*/
+{
+   "service":3,
+   "agency":49,
+   "from":{
+      "name":"Arthur",
+      "phone":"53984470102",
+      "email":"contato@melhorenvio.com.br",
+      "document":"16571478358",
+      "company_document":"89794131000100",
+      "state_register":"123456",
+      "address":"rua 17 quadra 78 lote 67 parque estrela dalva 18",
+      "complement":"Complemento",
+      "number":"1",
+      "district":"Bairro",
+      "city":"São Paulo",
+      "country_id":"BR",
+      "postal_code":"01002001",
+      "note":"observação"
+   },
+   "to":{
+      "name":"Guilherme",
+      "phone":"53984470102",
+      "email":"contato@melhorenvio.com.br",
+      "document":"25404918047",
+      "company_document":"07595604000177",
+      "state_register":"123456",
+      "address":"rua 19 quadra 79 lote 97 parque estrela dalva 98",
+      "complement":"Complemento",
+      "number":"2",
+      "district":"Bairro",
+      "city":"Porto Alegre",
+      "state_abbr":"RS",
+      "country_id":"BR",
+      "postal_code":"90570020",
+      "note":"observação"
+   },
+   "products":[
+      {
+         "name":"Papel adesivo para etiquetas 1",
+         "quantity":3,
+         "unitary_value":100.00
+      },
+      {
+         "name":"Papel adesivo para etiquetas 2",
+         "quantity":1,
+         "unitary_value":100.00
+      }
+   ],
+   "volumes":[
+      {
+         "height":15,
+         "width":20,
+         "length":10,
+         "weight":3.5
+      }
+   ],
+   "options":{
+      "insurance_value":10.00,
+      "receipt":false,
+      "own_hand":false,
+      "reverse":false,
+      "non_commercial":false,
+      "invoice":{
+         "key":"31190307586261000184550010000092481404848162"
+      },
+      "platform":"Nome da Plataforma",
+      "tags":[
+         {
+            "tag":"Identificação do pedido na plataforma, exemplo: 1000007",
+            "url":"Link direto para o pedido na plataforma, se possível, caso contrário pode ser passado o valor null"
+         }
+      ]
+   }
+}
+
+/*JSON DE RETORNO DA AÇÃO DE INSERIR FRETE*/
+{
+   "id":"9fae8b0d-902f-4276-8e74-9a5355d6c388",
+   "protocol":"ORD-202508243682",
+   "service_id":3,
+   "agency_id":49,
+   "contract":null,
+   "service_code":null,
+   "quote":28.94,
+   "price":28.94,
+   "coupon":null,
+   "discount":0,
+   "delivery_min":5,
+   "delivery_max":6,
+   "status":"pending",
+   "reminder":null,
+   "insurance_value":10,
+   "weight":null,
+   "width":null,
+   "height":null,
+   "length":null,
+   "diameter":null,
+   "format":"box",
+   "billed_weight":3.5,
+   "receipt":false,
+   "own_hand":false,
+   "collect":false,
+   "collect_scheduled_at":null,
+   "reverse":0,
+   "non_commercial":false,
+   "authorization_code":null,
+   "tracking":null,
+   "self_tracking":null,
+   "delivery_receipt":null,
+   "additional_info":null,
+   "cte_key":null,
+   "paid_at":null,
+   "generated_at":null,
+   "posted_at":null,
+   "delivered_at":null,
+   "canceled_at":null,
+   "suspended_at":null,
+   "expired_at":null,
+   "created_at":"2025-08-20 20:01:00",
+   "updated_at":"2025-08-20 20:01:00",
+   "parse_pi_at":null,
+   "received_at":null,
+   "risk":false
+}
