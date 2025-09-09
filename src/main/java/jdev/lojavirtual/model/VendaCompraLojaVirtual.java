@@ -119,6 +119,39 @@ public class VendaCompraLojaVirtual implements Serializable {
 	
 	private Boolean excluido = Boolean.FALSE; 
 	
+	@Column(name = "codigo_etiqueta")
+	private String codigoEtiqueta;
+	
+	@Column(name = "url_imprime_etiqueta")
+	private String urlImprimeEtiqueta;
+	
+	// Frete que foi escolido no momento da compra
+	private String serviceTransportadora;
+	
+	public String getServiceTransportadora() {
+		return serviceTransportadora;
+	}
+
+	public void setServiceTransportadora(String serviceTransportadora) {
+		this.serviceTransportadora = serviceTransportadora;
+	}
+
+	public String getCodigoEtiqueta() {
+		return codigoEtiqueta;
+	}
+
+	public void setCodigoEtiqueta(String codigoEtiqueta) { 
+		this.codigoEtiqueta = codigoEtiqueta;
+	}
+
+	public String getUrlImprimeEtiqueta() {
+		return urlImprimeEtiqueta;
+	}
+
+	public void setUrlImprimeEtiqueta(String urlImprimeEtiqueta) {
+		this.urlImprimeEtiqueta = urlImprimeEtiqueta;
+	}
+
 	public StatusVendaLojaVirtual getStatusVendaLojaVirtual() {
 		return statusVendaLojaVirtual;
 	}

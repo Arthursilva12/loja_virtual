@@ -25,6 +25,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import jdev.lojavirtual.enums.TipoEndereco;
+
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @SequenceGenerator(name = "seq_pessoa", sequenceName = "seq_pessoa", initialValue = 1, allocationSize = 1)
@@ -58,6 +60,20 @@ public abstract class Pessoa  implements Serializable {
 	@JoinColumn(name = "empresa_id", nullable = true,
 	foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "empresa_id_fk"))
 	private Pessoa empresa;
+	
+	public Endereco enderecoEntrega() {
+		
+		Endereco enderecoReturn = null;
+		
+		for(Endereco endereco : enderecos) {
+			if(endereco.getTipoEndereco().name().equals(TipoEndereco.ENTREGA.name())) {
+				enderecoReturn = endereco;
+				break;
+			}
+		}
+		
+		return enderecoReturn;
+	}
 	
 	public Pessoa getEmpresa() {
 		return empresa;
