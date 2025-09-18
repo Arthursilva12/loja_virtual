@@ -16,9 +16,8 @@
 
 ### Pré-requisitos
 - Java (17 ou superior)
-- Git 
+- Git (opcional, para controle de versão)
 
 ## Instrução de instalação 
-    npm install
 
 ## Instruções de uso
