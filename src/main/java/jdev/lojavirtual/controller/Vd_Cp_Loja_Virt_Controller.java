@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -51,6 +50,7 @@ import jdev.lojavirtual.repository.StatusRastreioRepository;
 import jdev.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
 import jdev.lojavirtual.service.ServiceSendEmail;
 import jdev.lojavirtual.service.VendaService;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -113,15 +113,6 @@ public class Vd_Cp_Loja_Virt_Controller {
 		
 		// salva primeiro a venda e todos os dados
 		vendaCompraLojaVirtual = vd_Cp_Loja_virt_repository.saveAndFlush(vendaCompraLojaVirtual);
-		
-		StatusRastreio sRastreio = new StatusRastreio();
-		sRastreio.setCentroDistribuicao("LOja Local");
-		sRastreio.setCidade("local");
-		sRastreio.setEmpresa(vendaCompraLojaVirtual.getEmpresa());
-		sRastreio.setEstado("local");
-		sRastreio.setStatus("Inicio Compra");
-		sRastreio.setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
-		statusRastreioRepository.save(sRastreio);
 		
 		// associa a venda gravada no banco com a nota fiscal
 		vendaCompraLojaVirtual.getNotaFiscalVenda().setVendaCompraLojaVirtual(vendaCompraLojaVirtual);
@@ -207,6 +198,27 @@ public class Vd_Cp_Loja_Virt_Controller {
 		}
 		
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO, HttpStatus.OK);
+	}
+	
+	@ResponseBody
+	@GetMapping(value = "/cancelaEtiqueta/{descricao}/{reason_id}/{idEtiqueta}")
+	public ResponseEntity<String> cancelaEtiqueta(@PathVariable String descricao, @PathVariable String reason_id, @PathVariable String idEtiqueta) throws IOException {
+		
+		OkHttpClient client = new OkHttpClient();
+
+		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, "{\"order\":{\"reason_id\":\""+reason_id+"\",\"description\":\""+descricao+"\",\"id\":\""+idEtiqueta+"\"}}");
+		okhttp3.Request request = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_TOKEN_MELHR_ENVIO_SAND_BOX + "api/v2/me/shipment/cancel")
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-Type", "application/json")
+		  .addHeader("Authorization", "Bearer " +  ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+		  .addHeader("User-Agent", "silvaarthur.pereira123@gmail.com")
+		  .build();
+
+		Response response = client.newCall(request).execute();
+		return new ResponseEntity<String>(response.body().string(), HttpStatus.OK);
 	}
 	
 	
@@ -335,7 +347,8 @@ public class Vd_Cp_Loja_Virt_Controller {
 		
 		if (idEtiqueta != null && !idEtiqueta.isEmpty() && compraLojaVirtual.getId() != null) {
 			// Salvando o codigo da etiquta
-			jdbcTemplate.execute("update vd_cp_loja_virt set codigo_etiqueta = '"+idEtiqueta+"' where id = "+compraLojaVirtual.getId()+";");
+			jdbcTemplate.execute("begin; update vd_cp_loja_virt set codigo_etiqueta = '"+idEtiqueta+"' where id = "+compraLojaVirtual.getId()+";commit;");
+			System.out.println(idEtiqueta.toString());
 		}
 		
 		//vd_Cp_Loja_virt_repository.updateEtiqueta(idEtiqueta, compraLojaVirtual.getId());
@@ -400,6 +413,51 @@ public class Vd_Cp_Loja_Virt_Controller {
 			jdbcTemplate.execute("begin; update vd_cp_loja_virt set url_imprime_etiqueta = '"+urlEtiqueta+"' where id = '"+compraLojaVirtual.getId()+"' ;commit;");
 		}
 		//		vd_Cp_Loja_virt_repository.updateUrlEtiqueta(urlEtiqueta, compraLojaVirtual.getId());
+		
+		// Rastreio de envios
+		okhttp3.OkHttpClient clientRastreio = new OkHttpClient();
+		okhttp3.MediaType mediaTypeR = MediaType.parse("application/json");
+		okhttp3.RequestBody bodyR = okhttp3.RequestBody.create(mediaTypeR, "{\"orders\":[\"9fae8b0d-902f-4276-8e74-9a5355d6c388\"]}");
+		okhttp3.Request requestR = new okhttp3.Request.Builder()
+		  .url(ApiTokenIntegracao.URL_TOKEN_MELHR_ENVIO_SAND_BOX + "api/v2/me/shipment/tracking")
+		  .post(bodyR)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+		  .addHeader("User-Agent", "silvaarthur.pereira123@gmail.com")
+		  .build();
+
+		Response responseR = clientRastreio.newCall(request).execute();
+		
+		JsonNode jsonNodeR = new ObjectMapper().readTree(responseR.body().string());
+		java.util.Iterator<JsonNode> iteratorR = jsonNodeR.iterator();
+		
+		String idEtiquetaR = "";
+		while(iteratorR.hasNext()) {
+			JsonNode node = iterator.next(); 
+			
+			if (node.get("tracking") != null) {
+				idEtiquetaR = node.get("tracking").asText();
+			}else {
+				idEtiquetaR = node.asText();
+			}
+			break;
+		}
+		
+		List<StatusRastreio> rastreios = statusRastreioRepository.listRastreioVenda(idVenda);
+		
+		if (rastreios.isEmpty()) {
+			StatusRastreio rastreio = new StatusRastreio();
+			rastreio.setEmpresa(compraLojaVirtual.getEmpresa());
+			rastreio.setVendaCompraLojaVirtual(compraLojaVirtual);
+			rastreio.setIdTranportadora("");
+			rastreio.setUrlRastreio("https://melhorrastreio.com.br/app/"+rastreio.getIdTranportadora()+"/" + idEtiquetaR);
+			
+			statusRastreioRepository.saveAndFlush(rastreio);
+		}else {
+			statusRastreioRepository.salvaUrlRastreio("" + idEtiquetaR, idVenda);
+		}
+		
 		
 		return new ResponseEntity<String>("Sucesso", HttpStatus.OK);
 	}

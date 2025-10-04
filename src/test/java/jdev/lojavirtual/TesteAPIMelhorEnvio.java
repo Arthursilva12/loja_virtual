@@ -2,9 +2,6 @@ package jdev.lojavirtual;
 
 import java.io.IOException;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jdev.lojavirtual.enums.ApiTokenIntegracao;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -15,6 +12,23 @@ import okhttp3.Response;
 public class TesteAPIMelhorEnvio {
 
 	public static void main(String[] args) throws IOException {	
+		
+		// Rastreio de envios
+		OkHttpClient client = new OkHttpClient();
+		MediaType mediaType = MediaType.parse("application/json");
+		RequestBody body = RequestBody.create(mediaType, "{\"orders\":[\"9fae8b0d-902f-4276-8e74-9a5355d6c388\"]}");
+		Request request = new Request.Builder()
+		  .url(ApiTokenIntegracao.URL_TOKEN_MELHR_ENVIO_SAND_BOX + "api/v2/me/shipment/tracking")
+		  .post(body)
+		  .addHeader("Accept", "application/json")
+		  .addHeader("Content-type", "application/json")
+		  .addHeader("Authorization", "Bearer " + ApiTokenIntegracao.TOKEN_MELHOR_ENVIO_SAND_BOX)
+		  .addHeader("User-Agent", "silvaarthur.pereira123@gmail.com")
+		  .build();
+
+		Response response = client.newCall(request).execute();
+		System.out.println(response.body().string());
+		
 		/*
 		// Insere etiquetas de frete
 		OkHttpClient client = new OkHttpClient();
@@ -69,6 +83,7 @@ public class TesteAPIMelhorEnvio {
 		*/
 		
 		// Faz impresão das etiquestas
+		/*
 		OkHttpClient client = new OkHttpClient();
 		MediaType mediaType = MediaType.parse("application/json");
 		RequestBody body = RequestBody.create(mediaType, "{\"orders\":[\"9fae8b0d-902f-4276-8e74-9a5355d6c388\"]}");
@@ -82,7 +97,7 @@ public class TesteAPIMelhorEnvio {
 		  .build();
 
 		Response response = client.newCall(request).execute();
-		System.out.println(response.body().string());
+		System.out.println(response.body().string());*/
 	}
 	
 }
