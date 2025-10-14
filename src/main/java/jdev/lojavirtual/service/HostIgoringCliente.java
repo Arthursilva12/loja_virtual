@@ -15,6 +15,9 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.glassfish.jersey.media.multipart.internal.MultiPartWriter;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.config.DefaultClientConfig;
 import com.sun.jersey.client.urlconnection.HTTPSProperties;
@@ -71,7 +74,11 @@ public class HostIgoringCliente implements Serializable{
 			}
 		}, sslContext);
 		
-		return null;
+		properties.put(httpsProperties.PROPERTY_HTTPS_PROPERTIES, httpsProperties);
+		config.getClasses().add(JacksonJsonProvider.class);
+		config.getClasses().add(MultiPartWriter.class);
+		
+		return Client.create();
 		
 	}
 }
