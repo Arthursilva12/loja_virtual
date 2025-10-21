@@ -12,6 +12,7 @@ import jdev.lojavirtual.model.Endereco;
 import jdev.lojavirtual.model.PessoaFisica;
 import jdev.lojavirtual.model.PessoaJuridica;
 import jdev.lojavirtual.repository.PessoaRepository;
+import jdev.lojavirtual.service.ServiceJunoBoleto;
 import junit.framework.TestCase;
 
 @Profile("test")
@@ -27,6 +28,15 @@ public class TestePessoaUsuario extends TestCase{
 	
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private ServiceJunoBoleto serviceJunoBoleto;
+	
+	@Test
+	public void testeToken() throws Exception {
+		String valor = serviceJunoBoleto.geraChaveBoletoPix();
+		System.out.println(valor);
+	}
 	
 	@Test
 	public void TesteFormaPagamento() {
