@@ -39,6 +39,7 @@ import jdev.lojavirtual.model.dto.ConsultaFreteDTO;
 import jdev.lojavirtual.model.dto.EmpresaTransporteDTO;
 import jdev.lojavirtual.model.dto.EnvioEtiquetaDTO;
 import jdev.lojavirtual.model.dto.ItemVendaDTO;
+import jdev.lojavirtual.model.dto.ObjetoPostCarneJunoDTO;
 import jdev.lojavirtual.model.dto.ProductsEnvioEtiquetaDTO;
 import jdev.lojavirtual.model.dto.TagsEnvioDTO;
 import jdev.lojavirtual.model.dto.VendaCompraLojaVirtualDTO;
@@ -48,6 +49,7 @@ import jdev.lojavirtual.repository.EnderecoRepository;
 import jdev.lojavirtual.repository.NotaFiscalVendaRepository;
 import jdev.lojavirtual.repository.StatusRastreioRepository;
 import jdev.lojavirtual.repository.Vd_Cp_Loja_virt_repository;
+import jdev.lojavirtual.service.ServiceJunoBoleto;
 import jdev.lojavirtual.service.ServiceSendEmail;
 import jdev.lojavirtual.service.VendaService;
 import okhttp3.MediaType;
@@ -84,6 +86,9 @@ public class Vd_Cp_Loja_Virt_Controller {
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private ServiceJunoBoleto serviceJunoBoleto;
 	
 	@ResponseBody
 	@PostMapping(value = "/salvarVendaLoja")
@@ -199,6 +204,7 @@ public class Vd_Cp_Loja_Virt_Controller {
 		
 		return new ResponseEntity<VendaCompraLojaVirtualDTO>(compraLojaVirtualDTO, HttpStatus.OK);
 	}
+	
 	
 	@ResponseBody
 	@GetMapping(value = "/cancelaEtiqueta/{descricao}/{reason_id}/{idEtiqueta}")
@@ -668,6 +674,20 @@ public class Vd_Cp_Loja_Virt_Controller {
 	
 	
 	@ResponseBody
+	@PostMapping(value = "gerarBoletoPix")
+	public ResponseEntity<String> gerarBoletoPix(@RequestBody @Valid ObjetoPostCarneJunoDTO objetoPostCarneJunoDTO) throws Exception {
+		return new ResponseEntity<String>(serviceJunoBoleto.gerarCarnerAPi(objetoPostCarneJunoDTO), HttpStatus.OK);
+	}
+	
+	
+	@ResponseBody
+	@PostMapping(value = "cancelarBoletoPix")
+	public ResponseEntity<String> cancelarBoletoPix(@RequestBody @Valid String code) throws Exception {
+		return new ResponseEntity<String>(serviceJunoBoleto.cancelarBoleto(code), HttpStatus.OK);
+	}
+	
+	
+	@ResponseBody
 	@PostMapping(value = "/consultarFreteLojaVirtual")
 	public ResponseEntity<List<EmpresaTransporteDTO>> consultaFrete(@RequestBody @Valid  ConsultaFreteDTO consultaFreteDTO) throws Exception {
 	
@@ -676,7 +696,7 @@ public class Vd_Cp_Loja_Virt_Controller {
 		
 		OkHttpClient client = new OkHttpClient();
 		okhttp3.MediaType mediaType = okhttp3.MediaType.parse("application/json");
-		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, json);
+		okhttp3.RequestBody body = okhttp3.RequestBody.create(mediaType, json); 
 		// instancia objeto de requisição
 		okhttp3.Request request = new okhttp3.Request.Builder()
 		  .url(ApiTokenIntegracao.URL_TOKEN_MELHR_ENVIO_SAND_BOX + "api/v2/me/shipment/calculate")

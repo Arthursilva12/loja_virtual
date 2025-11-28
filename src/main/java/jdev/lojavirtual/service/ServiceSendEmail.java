@@ -22,6 +22,7 @@ public class ServiceSendEmail {
 	private String userName = "silvaarthur.pereira123@gmail.com";
 	private String senha = "ocvl kxvv pdif iqvh";
 	
+	
 	@Async
 	public void enviarEmailHtml(String assunto, String mensagem, String emailDestino) throws UnsupportedEncodingException, MessagingException {
 		
