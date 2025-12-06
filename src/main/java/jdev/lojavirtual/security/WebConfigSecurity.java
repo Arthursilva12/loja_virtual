@@ -31,7 +31,10 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 		
 		http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
 			.disable().authorizeRequests().antMatchers("/").permitAll()
-			.antMatchers("/index").permitAll().antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+			.antMatchers("/index").permitAll()
+			.antMatchers(HttpMethod.POST, "/requisicaojunoboleto/**", "/notificacaoapiv2").permitAll()
+			.antMatchers(HttpMethod.GET, "/requisicaojunoboleto/**", "/notificacaoapiv2").permitAll()
+			.antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 			.anyRequest().authenticated().and().logout().logoutSuccessUrl("/index")// redireciona ou da um retorno para index quando desloga 
 			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))// mapeia o logout do sistema
 			.and().addFilterAfter(new JWTLoginFIlter("/login", authenticationManager()),
@@ -48,7 +51,8 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter implements H
 	
 	@Override// Ignora algumas ULR livres de autenticação
 	public void configure(WebSecurity web) throws Exception {
-//		web.ignoring().antMatchers(HttpMethod.GET, "/salvarAcesso", "/deleteAcesso")
-//					.antMatchers(HttpMethod.POST, "/salvarAcesso", "/deleteAcesso");
+		web.ignoring()
+		   	.antMatchers(HttpMethod.GET, "//requisicaojunoboleto/**", "/notificacaoapiv2")
+		   	.antMatchers(HttpMethod.POST, "/requisicaojunoboleto/**", "/notificacaoapiv2");
 	}
 }
